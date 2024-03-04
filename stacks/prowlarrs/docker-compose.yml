@@ -1,0 +1,61 @@
+---
+services:
+  prowlarr-media:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr-media
+    environment:
+      - PUID=3000
+      - PGID=568
+      - TZ=Pacific/Auckland
+    volumes:
+      - prowlarr-media-config:/config
+    networks:
+      - media
+    # ports:
+    #   - 9696:9696
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prowlarr-media.rule=Host(`prowlarr-media.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.prowlarr-media.entrypoints=websecure"
+      - "traefik.http.routers.prowlarr-media.tls.certresolver=production"
+
+  prowlarr-other:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr-other
+    environment:
+      - PUID=3000
+      - PGID=568
+      - TZ=Pacific/Auckland
+    volumes:
+      - prowlarr-other-config:/config
+    networks:
+      - downloads
+    # ports:
+    #   - 9696:9696
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prowlarr-other.rule=Host(`prowlarr-other.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.prowlarr-other.entrypoints=websecure"
+      - "traefik.http.routers.prowlarr-other.tls.certresolver=production"
+
+volumes:
+  prowlarr-media-config:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=10.13.25.3,nolock,soft,nfsvers=4
+      device: ":/mnt/software/configurations/prowlarr-media"
+  prowlarr-other-config:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=10.13.25.3,nolock,soft,nfsvers=4
+      device: ":/mnt/software/configurations/prowlarr-other"
+
+networks:
+  media:
+    external: true
+  downloads:
+    external: true
