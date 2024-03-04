@@ -1,0 +1,61 @@
+---
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    runtime: nvidia
+    environment:
+      - PUID=3000
+      - PGID=568
+      - TZ=Pacific/Auckland
+      - JELLYFIN_PublishedServerUrl=jellyfin.weirdrussianserver.xyz #optional
+      - NVIDIA_VISIBLE_DEVICES=GPU-d53d5372-cc7d-6515-81b1-f8539d042356
+    volumes:
+      - config:/config
+      - movies:/movies
+      - series:/series
+      - anime:/anime
+    networks:
+      - media
+    ports:
+      - 8096:8096
+      # - 8920:8920 #optional
+      # - 7359:7359/udp #optional
+      # - 1900:1900/udp #optional
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.jellyfin.entrypoints=websecure"
+      - "traefik.http.routers.jellyfin.tls.certresolver=production"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+
+volumes:
+  config:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=10.13.25.3,nolock,soft,nfsvers=4
+      device: ":/mnt/software/configurations/jellyfin"
+  movies:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=10.13.25.3,nolock,soft,nfsvers=4
+      device: ":/mnt/depot/media/movies/library"
+  series:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=10.13.25.3,nolock,soft,nfsvers=4
+      device: ":/mnt/depot/media/series/library"
+  anime:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=10.13.25.3,nolock,soft,nfsvers=4
+      device: ":/mnt/depot/media/anime/library"
+
+networks:
+  media:
+    external: true
