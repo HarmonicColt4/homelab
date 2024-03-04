@@ -43,6 +43,75 @@ services:
       - "traefik.http.routers.sonarr.entrypoints=websecure"
       - "traefik.http.routers.sonarr.tls.certresolver=production"
 
+  sonarr-anime:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr-anime
+    environment:
+      - PUID=3000
+      - PGID=568
+      - TZ=Pacific/Auckland
+    volumes:
+      - sonarr-anime-config:/config
+      - anime:/anime #optional
+    networks:
+      - media
+    # ports:
+    #   - 8989:8989
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr-anime.rule=Host(`sonarr-anime.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.sonarr-anime.entrypoints=websecure"
+      - "traefik.http.routers.sonarr-anime.tls.certresolver=production"
+
+  jellyseerr:
+    container_name: jellyseerr
+    image: ghcr.io/hotio/jellyseerr
+    # ports:
+    #   - "5055:5055"
+    environment:
+      - PUID=3000
+      - PGID=568
+      - UMASK=002
+      - TZ=Pacific/Auckland
+    volumes:
+      - jellyseerr-config:/config
+    networks:
+      - media
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.jellyseerr.entrypoints=websecure"
+      - "traefik.http.routers.jellyseerr.tls.certresolver=production"
+
+  flaresolverr:
+    # DockerHub mirror flaresolverr/flaresolverr:latest
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=Pacific/Auckland
+    networks:
+      - media
+    # ports:
+    #   - "${PORT:-8191}:8191"
+    restart: unless-stopped
+
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr
+    container_name: recyclarr
+    user: 3000:568
+    networks:
+      - media
+    volumes:
+      - recyclarr-config:/config
+    environment:
+      - TZ=Pacific/Auckland
+    restart: unless-stopped
+
 volumes:
   radarr-config:
     driver: local
@@ -62,6 +131,18 @@ volumes:
       type: nfs
       o: addr=10.13.25.3,nolock,soft,nfsvers=4
       device: ":/mnt/software/configurations/sonarr-anime"
+  jellyseerr-config:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=10.13.25.3,nolock,soft,nfsvers=4
+      device: ":/mnt/software/configurations/jellyseerr"
+  recyclarr-config:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=10.13.25.3,nolock,soft,nfsvers=4
+      device: ":/mnt/software/configurations/recyclarr"
   movies:
     driver: local
     driver_opts:
