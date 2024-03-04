@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: always
+    environment:
+      - WEBSOCKET_ENABLED=true
+      - SIGNUPS_ALLOWED=true
+      - INVITATIONS_ALLOWED=false
+      - ADMIN_TOKEN="$argon2id$v=19$m=65540,t=3,p=4$xfFpqZ9irvvQvZPEiEilfqzMjDBwmhiNioyUjS+4yzY$humrP7Ajks/j4UmXO3wQ8JNK8YVZ7tf+HUva8TM7+JY"
+      - DOMAIN=https://vaultwarden.weirdrussianserver.xyz
+    volumes:
+      - config:/data
+    networks:
+      - other
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vaultwarden.rule=Host(`vaultwarden.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.vaultwarden.entrypoints=websecure"
+      - "traefik.http.routers.vaultwarden.tls.certresolver=production"
+      # - "traefik.http.services.vaultwarden.loadbalancer.server.port=8443"
+      # - "traefik.http.services.vaultwarden.loadbalancer.server.scheme=https"
+
+networks:
+  other:
+    external: true
+volumes:
+  config:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=10.13.25.3,nolock,soft,nfsvers=4
+      device: ":/mnt/software/configurations/vaultwarden"
