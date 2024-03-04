@@ -12,9 +12,9 @@ services:
       - NVIDIA_VISIBLE_DEVICES=GPU-d53d5372-cc7d-6515-81b1-f8539d042356
     volumes:
       - config:/config
-      - movies:/movies
-      - series:/series
-      - anime:/anime
+      - movies-library:/movies
+      - series-library:/series
+      - anime-library:/anime
     networks:
       - media
     ports:
@@ -37,19 +37,19 @@ volumes:
       type: nfs
       o: addr=10.13.25.3,nolock,soft,nfsvers=4
       device: ":/mnt/software/configurations/jellyfin"
-  movies:
+  movies-library:
     driver: local
     driver_opts:
       type: nfs
       o: addr=10.13.25.3,nolock,soft,nfsvers=4
       device: ":/mnt/depot/media/movies/library"
-  series:
+  series-library:
     driver: local
     driver_opts:
       type: nfs
       o: addr=10.13.25.3,nolock,soft,nfsvers=4
       device: ":/mnt/depot/media/series/library"
-  anime:
+  anime-library:
     driver: local
     driver_opts:
       type: nfs
