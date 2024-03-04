@@ -1,0 +1,99 @@
+---
+services:
+  qbit-media:
+    container_name: qbit-media
+    image: ghcr.io/hotio/qbittorrent
+    environment:
+      - PUID=3000
+      - PGID=568
+      - UMASK=002
+      - TZ=Pacific/Auckland
+      - WEBUI_PORTS=8080/tcp,8080/udp
+    volumes:
+      - qbit-media-config:/config
+      - movie-torrents:/movies/torrents
+      - series-torrents:/series/torrents
+      - anime-torrents:/anime/torrents
+      # - books-torrents:/books/torrents
+    networks:
+      - media
+    ports:
+      - 61917:61917
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbit-media.rule=Host(`qbit-media.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.qbit-media.entrypoints=websecure"
+      - "traefik.http.routers.qbit-media.tls.certresolver=production"
+  qbit-other:
+    container_name: qbit-other
+    image: ghcr.io/hotio/qbittorrent
+    environment:
+      - PUID=3000
+      - PGID=568
+      - UMASK=002
+      - TZ=Pacific/Auckland
+      - WEBUI_PORTS=8080/tcp,8080/udp
+    volumes:
+      - qbit-other-config:/config
+      - downloads:/downloads
+    networks:
+      - downloads
+    ports:
+      - 50413:50413
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbit-other.rule=Host(`qbit-other.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.qbit-other.entrypoints=websecure"
+      - "traefik.http.routers.qbit-other.tls.certresolver=production"
+
+volumes:
+  qbit-media-config:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=10.13.25.3,nolock,soft,nfsvers=4
+      device: ":/mnt/software/configurations/qbit-media"
+  movie-torrents:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=10.13.25.3,nolock,soft,nfsvers=4
+      device: ":/mnt/depot/media/movies/torrents"
+  series-torrents:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=10.13.25.3,nolock,soft,nfsvers=4
+      device: ":/mnt/depot/media/series/torrents"
+  anime-torrents:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=10.13.25.3,nolock,soft,nfsvers=4
+      device: ":/mnt/depot/media/anime/torrents"
+  # books-torrents:
+  #   driver: local
+  #   driver_opts:
+  #     type: nfs
+  #     o: addr=10.13.25.3,nolock,soft,nfsvers=4
+  #     device: ":/mnt/depot/media/books/torrents"
+  qbit-other-config:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=10.13.25.3,nolock,soft,nfsvers=4
+      device: ":/mnt/software/configurations/qbit-other"
+  downloads:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=10.13.25.3,nolock,soft,nfsvers=4
+      device: ":/mnt/depot/downloads"
+
+networks:
+  media:
+    external: true
+  downloads:
+    external: true
