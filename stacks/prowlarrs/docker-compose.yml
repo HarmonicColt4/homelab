@@ -4,11 +4,11 @@ services:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr-media
     environment:
-      - PUID=3000
-      - PGID=568
+      - PUID=3001
+      - PGID=3001
       - TZ=Pacific/Auckland
     volumes:
-      - prowlarr-media-config:/config
+      - "/configurations/prowlarr-media:/config"
     networks:
       - media
     # ports:
@@ -24,11 +24,11 @@ services:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr-other
     environment:
-      - PUID=3000
-      - PGID=568
+      - PUID=3001
+      - PGID=3001
       - TZ=Pacific/Auckland
     volumes:
-      - prowlarr-other-config:/config
+      - "/configurations/prowlarr-other:/config"
     networks:
       - downloads
     # ports:
@@ -39,20 +39,6 @@ services:
       - "traefik.http.routers.prowlarr-other.rule=Host(`prowlarr-other.weirdrussianserver.xyz`)"
       - "traefik.http.routers.prowlarr-other.entrypoints=websecure"
       - "traefik.http.routers.prowlarr-other.tls.certresolver=production"
-
-volumes:
-  prowlarr-media-config:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: addr=10.13.25.3,nolock,soft,nfsvers=4
-      device: ":/mnt/software/configurations/prowlarr-media"
-  prowlarr-other-config:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: addr=10.13.25.3,nolock,soft,nfsvers=4
-      device: ":/mnt/software/configurations/prowlarr-other"
 
 networks:
   media:

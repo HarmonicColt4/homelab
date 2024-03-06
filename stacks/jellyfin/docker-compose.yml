@@ -5,13 +5,13 @@ services:
     container_name: jellyfin
     runtime: nvidia
     environment:
-      - PUID=3000
-      - PGID=568
+      - PUID=3001
+      - PGID=3001
       - TZ=Pacific/Auckland
       - JELLYFIN_PublishedServerUrl=jellyfin.weirdrussianserver.xyz #optional
       - NVIDIA_VISIBLE_DEVICES=GPU-d53d5372-cc7d-6515-81b1-f8539d042356
     volumes:
-      - config:/config
+      - "/configurations/jellyfin:/config"
       - movies-library:/movies
       - series-library:/series
       - anime-library:/anime
@@ -31,12 +31,6 @@ services:
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
 
 volumes:
-  config:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: addr=10.13.25.3,nolock,soft,nfsvers=4
-      device: ":/mnt/software/configurations/jellyfin"
   movies-library:
     driver: local
     driver_opts:

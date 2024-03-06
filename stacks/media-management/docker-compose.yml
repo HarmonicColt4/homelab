@@ -4,11 +4,11 @@ services:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
     environment:
-      - PUID=3000
-      - PGID=568
+      - PUID=3001
+      - PGID=3001
       - TZ=Pacific/Auckland
     volumes:
-      - radarr-config:/config
+      - /configurations/radarr:/config
       - movies:/movies #optional
     networks:
       - media
@@ -26,11 +26,11 @@ services:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     environment:
-      - PUID=3000
-      - PGID=568
+      - PUID=3001
+      - PGID=3001
       - TZ=Pacific/Auckland
     volumes:
-      - sonarr-config:/config
+      - /configurations/sonarr:/config
       - series:/series #optional
     networks:
       - media
@@ -47,11 +47,11 @@ services:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr-anime
     environment:
-      - PUID=3000
-      - PGID=568
+      - PUID=3001
+      - PGID=3001
       - TZ=Pacific/Auckland
     volumes:
-      - sonarr-anime-config:/config
+      - /configurations/sonarr-anime:/config
       - anime:/anime #optional
     networks:
       - media
@@ -70,12 +70,12 @@ services:
     # ports:
     #   - "5055:5055"
     environment:
-      - PUID=3000
-      - PGID=568
+      - PUID=3001
+      - PGID=3001
       - UMASK=002
       - TZ=Pacific/Auckland
     volumes:
-      - jellyseerr-config:/config
+      - /configurations/jellyseerr:/config
     networks:
       - media
     restart: unless-stopped
@@ -103,46 +103,16 @@ services:
   recyclarr:
     image: ghcr.io/recyclarr/recyclarr
     container_name: recyclarr
-    user: 3000:568
+    user: 3001:3001
     networks:
       - media
     volumes:
-      - recyclarr-config:/config
+      - /configurations/recyclarr:/config
     environment:
       - TZ=Pacific/Auckland
     restart: unless-stopped
 
 volumes:
-  radarr-config:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: addr=10.13.25.3,nolock,soft,nfsvers=4
-      device: ":/mnt/software/configurations/radarr"
-  sonarr-config:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: addr=10.13.25.3,nolock,soft,nfsvers=4
-      device: ":/mnt/software/configurations/sonarr"
-  sonarr-anime-config:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: addr=10.13.25.3,nolock,soft,nfsvers=4
-      device: ":/mnt/software/configurations/sonarr-anime"
-  jellyseerr-config:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: addr=10.13.25.3,nolock,soft,nfsvers=4
-      device: ":/mnt/software/configurations/jellyseerr"
-  recyclarr-config:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: addr=10.13.25.3,nolock,soft,nfsvers=4
-      device: ":/mnt/software/configurations/recyclarr"
   movies:
     driver: local
     driver_opts:
