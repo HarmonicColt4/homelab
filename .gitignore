@@ -1,3 +1,2 @@
 *.env
-stacks/bind9/weirdrussianserver-xyz.zone
-stacks/bind9/named.conf
+**/config
