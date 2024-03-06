@@ -3,24 +3,13 @@ services:
   bind9:
     image: ubuntu/bind9:latest
     container_name: bind9
-    environment:
-      - BIND9_USER=root
-      - TZ=Pacific/Auckland
+    env_file:
+      - stack.env
     ports:
       - "53:53/tcp"
       - "53:53/udp"
     volumes:
-      - config:/etc/bind
-      - cache:/var/cache/bind
-      - records:/var/lib/bind
+      - /configurations/bind9/config":/etc/bind
+      - /configurations/bind9/cache":/var/cache/bind
+      - /configurations/bind9/records":/var/lib/bind
     restart: always
-
-volumes:
-  config:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: addr=10.13.25.3,nolock,soft,nfsvers=4
-      device: ":/mnt/software/configurations/bind9/config"
-  cache:
-  records:
