@@ -1,0 +1,31 @@
+---
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    environment:
+      PUID: 0
+      PGID: 3001
+    networks:
+      - other
+      - media
+      - downloads
+    ports:
+      - 3000:3000
+    volumes:
+      - /configurations/homepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homepage.rule=Host(`homepage.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.homepage.entrypoints=websecure"
+      - "traefik.http.routers.homepage.tls.certresolver=production"
+
+networks:
+  other:
+    external: true
+  media:
+    external: true
+  downloads:
+    external: true
