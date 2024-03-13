@@ -1,0 +1,36 @@
+---
+services:
+  nextcloud:
+    image: lscr.io/linuxserver/nextcloud:latest
+    container_name: nextcloud
+    environment:
+      - PUID=3001
+      - PGID=3001
+      - TZ=Pacific/Auckland
+    networks:
+      - postgres
+      - other
+    volumes:
+      - /configurations/nextcloud:/config
+      - data:/data
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.nextcloud.entrypoints=websecure"
+      - "traefik.http.routers.nextcloud.tls.certresolver=production"
+      - "traefik.http.services.nextcloud.loadbalancer.server.port=443"
+
+volumes:
+  data:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=10.13.25.3,nolock,soft,nfsvers=4
+      device: ":/mnt/storage/nextcloud"
+
+networks:
+  postgres:
+    external: true
+  other:
+    external: true
