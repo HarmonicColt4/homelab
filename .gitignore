@@ -1,2 +1,7 @@
-*.env
-**/config
+stacks/**/config
+terraform/.terraform
+terraform/.vscode
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate*
+terraform/PVE_CREDS
+terraform/terraform.tfvars
