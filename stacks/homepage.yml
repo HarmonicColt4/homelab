@@ -13,12 +13,12 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - /configurations/homepage:/app/config
+      - $CONF_FOLDER/homepage:/app/config
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.homepage.rule=Host(`homepage.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.homepage.rule=Host(`homepage.$DOMAIN`)"
       - "traefik.http.routers.homepage.entrypoints=websecure"
       - "traefik.http.routers.homepage.tls.certresolver=production"
 

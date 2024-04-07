@@ -11,12 +11,12 @@ services:
       - postgres
       - other
     volumes:
-      - /configurations/nextcloud:/config
+      - $CONF_FOLDER/nextcloud:/config
       - data:/data
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.$DOMAIN`)"
       - "traefik.http.routers.nextcloud.entrypoints=websecure"
       - "traefik.http.routers.nextcloud.tls.certresolver=production"
       - "traefik.http.services.nextcloud.loadbalancer.server.port=443"
@@ -26,7 +26,7 @@ volumes:
     driver: local
     driver_opts:
       type: nfs
-      o: addr=10.13.25.3,nolock,soft,nfsvers=4
+      o: addr=$NAS_IP,nolock,soft,nfsvers=4
       device: ":/mnt/storage/nextcloud"
 
 networks:

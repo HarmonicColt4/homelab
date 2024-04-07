@@ -12,8 +12,8 @@ services:
       - 443:443
       # - 8080:8080 # Dashboard
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /configurations/traefik:/etc/traefik
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "$CONF_FOLDER/traefik:/etc/traefik"
     env_file:
       - stack.env
     networks:

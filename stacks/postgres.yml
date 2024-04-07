@@ -7,8 +7,6 @@ services:
     networks:
       - postgres
     restart: unless-stopped
-    env_file:
-      - stack.env
   
   pgadmin:
     container_name: pgadmin4
@@ -23,7 +21,7 @@ services:
       - stack.env
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.$DOMAIN`)"
       - "traefik.http.routers.pgadmin.entrypoints=websecure"
       - "traefik.http.routers.pgadmin.tls.certresolver=production"
       - "traefik.http.services.pgadmin.loadbalancer.server.port=80"

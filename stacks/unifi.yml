@@ -27,7 +27,7 @@ services:
       - init:/unifi/init.d
       - run:/var/run/unifi
       # Mount local folder for backups and autobackups
-      - /configurations/unifi/backup:/unifi/data/backup
+      - $CONF_FOLDER/unifi/backup:/unifi/data/backup
     user: unifi
     env_file:
       - stack.env
@@ -47,7 +47,7 @@ services:
       - "10001:10001/udp" # AP discovery
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.unifi.rule=Host(`${HOST}`)"
+      - "traefik.http.routers.unifi.rule=Host(`unifi.$HOST`)"
       - "traefik.http.routers.unifi.entrypoints=websecure"
       - "traefik.http.routers.unifi.tls.certresolver=production"
       - "traefik.http.services.unifi.loadbalancer.server.port=8443"

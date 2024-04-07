@@ -10,7 +10,7 @@ services:
       - TZ=Pacific/Auckland
       - WEBUI_PORTS=8080/tcp,8080/udp
     volumes:
-      - /configurations/qbit-media:/config
+      - $CONF_FOLDER/qbit-media:/config
       - movie-torrents:/movies/torrents
       - series-torrents:/series/torrents
       - anime-torrents:/anime/torrents
@@ -22,7 +22,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.qbit-media.rule=Host(`qbit-media.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.qbit-media.rule=Host(`qbit-media.$DOMAIN`)"
       - "traefik.http.routers.qbit-media.entrypoints=websecure"
       - "traefik.http.routers.qbit-media.tls.certresolver=production"
   qbit-other:
@@ -35,7 +35,7 @@ services:
       - TZ=Pacific/Auckland
       - WEBUI_PORTS=8080/tcp,8080/udp
     volumes:
-      - /configurations/qbit-other:/config
+      - $CONF_FOLDER/qbit-other:/config
       - downloads:/downloads
     networks:
       - downloads
@@ -44,7 +44,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.qbit-other.rule=Host(`qbit-other.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.qbit-other.rule=Host(`qbit-other.$DOMAIN`)"
       - "traefik.http.routers.qbit-other.entrypoints=websecure"
       - "traefik.http.routers.qbit-other.tls.certresolver=production"
 
@@ -54,32 +54,32 @@ volumes:
     driver: local
     driver_opts:
       type: nfs
-      o: addr=10.13.25.3,nolock,soft,nfsvers=4
-      device: ":/mnt/depot/media/movies/torrents"
+      o: addr=$NAS_IP,nolock,soft,nfsvers=4
+      device: ":$MEDIA_NFS_PATH/movies/torrents"
   series-torrents:
     driver: local
     driver_opts:
       type: nfs
-      o: addr=10.13.25.3,nolock,soft,nfsvers=4
-      device: ":/mnt/depot/media/series/torrents"
+      o: addr=$NAS_IP,nolock,soft,nfsvers=4
+      device: ":$MEDIA_NFS_PATH/series/torrents"
   anime-torrents:
     driver: local
     driver_opts:
       type: nfs
-      o: addr=10.13.25.3,nolock,soft,nfsvers=4
-      device: ":/mnt/depot/media/anime/torrents"
+      o: addr=$NAS_IP,nolock,soft,nfsvers=4
+      device: ":$MEDIA_NFS_PATH/anime/torrents"
   # books-torrents:
   #   driver: local
   #   driver_opts:
   #     type: nfs
-  #     o: addr=10.13.25.3,nolock,soft,nfsvers=4
-  #     device: ":/mnt/depot/media/books/torrents"
+  #     o: addr=$NAS_IP,nolock,soft,nfsvers=4
+  #     device: ":$MEDIA_NFS_PATH/books/torrents"
   downloads:
     driver: local
     driver_opts:
       type: nfs
-      o: addr=10.13.25.3,nolock,soft,nfsvers=4
-      device: ":/mnt/depot/downloads"
+      o: addr=$NAS_IP,nolock,soft,nfsvers=4
+      device: ":$DL_NFS_SHARE"
 
 networks:
   media:

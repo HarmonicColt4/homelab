@@ -9,7 +9,7 @@ services:
       - "53:53/tcp"
       - "53:53/udp"
     volumes:
-      - /configurations/bind9/config:/etc/bind
-      - /configurations/bind9/cache:/var/cache/bind
-      - /configurations/bind9/records:/var/lib/bind
+      - "$CONF_FOLDER/bind9/config:/etc/bind"
+      - "$CONF_FOLDER/bind9/cache:/var/cache/bind"
+      - "$CONF_FOLDER/bind9/records:/var/lib/bind"
     restart: always

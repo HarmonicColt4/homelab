@@ -68,5 +68,5 @@ volumes:
     driver: local
     driver_opts:
       type: nfs
-      o: addr=10.13.25.3,nolock,soft,nfsvers=4
+      o: addr=$NAS_IP,nolock,soft,nfsvers=4
       device: ":/mnt/storage/media"

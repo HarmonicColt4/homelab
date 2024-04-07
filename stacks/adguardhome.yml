@@ -1,0 +1,42 @@
+---
+networks:
+  network:
+    external: true
+  macvlan:
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: "10.13.25.0/24"
+          ip_range: "10.13.25.8/32"
+          gateway: "10.13.25.1"
+
+services:
+  adguardhome:
+    image: adguard/adguardhome
+    container_name: adguardhome
+    env_file:
+      - stack.env
+    volumes:
+      - "$CONF_FOLDER/adguardhome/work:/opt/adguardhome/work"
+      - "$CONF_FOLDER/adguardhome/conf:/opt/adguardhome/conf"
+    networks:
+      network:
+      macvlan:
+        ipv4_address: 10.13.25.8
+
+    ports:
+      - "53:53/udp"
+      - "53:53/tcp"
+      - "80:80/tcp"
+      - "443:443/udp"
+      - "443:443/tcp"
+      - "3000:3000/tcp"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.adguardhome.rule=Host(`aguardhome.$DOMAIN`)"
+      - "traefik.http.routers.adguardhome.entrypoints=websecure"
+      - "traefik.http.routers.adguardhome.tls.certresolver=production"
+      - "traefik.http.services.adguardhome.loadbalancer.server.port=$PORT"

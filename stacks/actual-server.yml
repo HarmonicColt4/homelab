@@ -9,14 +9,14 @@ services:
     # ports:
     #   - '5006:5006'
     volumes:
-      - "/configurations/actual-server:/data"
+      - "$CONF_FOLDER/actual-server:/data"
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.actual-server.rule=Host(`actual-server.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.actual-server.rule=Host(`actual-server.$DOMAIN`)"
       - "traefik.http.routers.actual-server.entrypoints=websecure"
       - "traefik.http.routers.actual-server.tls.certresolver=production"
-      - "traefik.http.services.actual-server.loadbalancer.server.port=5006"
+      - "traefik.http.services.actual-server.loadbalancer.server.port=$PORT"
 
 networks:
   other:

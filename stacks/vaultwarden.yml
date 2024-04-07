@@ -8,12 +8,12 @@ services:
     env_file:
       - stack.env
     volumes:
-      - "/configurations/vaultwarden:/data"
+      - "$CONF_FOLDER/vaultwarden:/data"
     networks:
       - other
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.vaultwarden.rule=Host(`vaultwarden.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.vaultwarden.rule=Host(`vaultwarden.$DOMAIN`)"
       - "traefik.http.routers.vaultwarden.entrypoints=websecure"
       - "traefik.http.routers.vaultwarden.tls.certresolver=production"
       # - "traefik.http.services.vaultwarden.loadbalancer.server.port=8443"

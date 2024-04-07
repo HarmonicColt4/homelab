@@ -8,7 +8,7 @@ services:
       - PGID=3001
       - TZ=Pacific/Auckland
     volumes:
-      - /configurations/radarr:/config
+      - $CONF_FOLDER/radarr:/config
       - movies:/movies #optional
     networks:
       - media
@@ -17,7 +17,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.radarr.rule=Host(`radarr.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.$DOMAIN`)"
       - "traefik.http.routers.radarr.entrypoints=websecure"
       - "traefik.http.routers.radarr.tls.certresolver=production"
       # - "traefik.http.services.radarr.loadbalancer.server.port=7878"
@@ -30,7 +30,7 @@ services:
       - PGID=3001
       - TZ=Pacific/Auckland
     volumes:
-      - /configurations/sonarr:/config
+      - $CONF_FOLDER/sonarr:/config
       - series:/series #optional
     networks:
       - media
@@ -39,7 +39,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.sonarr.rule=Host(`sonarr.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.$DOMAIN`)"
       - "traefik.http.routers.sonarr.entrypoints=websecure"
       - "traefik.http.routers.sonarr.tls.certresolver=production"
 
@@ -51,7 +51,7 @@ services:
       - PGID=3001
       - TZ=Pacific/Auckland
     volumes:
-      - /configurations/sonarr-anime:/config
+      - $CONF_FOLDER/sonarr-anime:/config
       - anime:/anime #optional
     networks:
       - media
@@ -60,7 +60,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.sonarr-anime.rule=Host(`sonarr-anime.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.sonarr-anime.rule=Host(`sonarr-anime.$DOMAIN`)"
       - "traefik.http.routers.sonarr-anime.entrypoints=websecure"
       - "traefik.http.routers.sonarr-anime.tls.certresolver=production"
 
@@ -75,13 +75,13 @@ services:
       - UMASK=002
       - TZ=Pacific/Auckland
     volumes:
-      - /configurations/jellyseerr:/config
+      - $CONF_FOLDER/jellyseerr:/config
     networks:
       - media
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.$DOMAIN`)"
       - "traefik.http.routers.jellyseerr.entrypoints=websecure"
       - "traefik.http.routers.jellyseerr.tls.certresolver=production"
 
@@ -107,7 +107,7 @@ services:
     networks:
       - media
     volumes:
-      - /configurations/recyclarr:/config
+      - $CONF_FOLDER/recyclarr:/config
     environment:
       - TZ=Pacific/Auckland
     restart: unless-stopped
@@ -117,20 +117,20 @@ volumes:
     driver: local
     driver_opts:
       type: nfs
-      o: addr=10.13.25.3,nolock,soft,nfsvers=4
-      device: ":/mnt/depot/media/movies"
+      o: addr=$NAS_IP,nolock,soft,nfsvers=4
+      device: ":$MEDIA_NFS_PATH/movies"
   series:
     driver: local
     driver_opts:
       type: nfs
-      o: addr=10.13.25.3,nolock,soft,nfsvers=4
-      device: ":/mnt/depot/media/series"
+      o: addr=$NAS_IP,nolock,soft,nfsvers=4
+      device: ":$MEDIA_NFS_PATH/series"
   anime:
     driver: local
     driver_opts:
       type: nfs
-      o: addr=10.13.25.3,nolock,soft,nfsvers=4
-      device: ":/mnt/depot/media/anime"
+      o: addr=$NAS_IP,nolock,soft,nfsvers=4
+      device: ":$MEDIA_NFS_PATH/anime"
 
 networks:
   media:

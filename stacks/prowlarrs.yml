@@ -8,7 +8,7 @@ services:
       - PGID=3001
       - TZ=Pacific/Auckland
     volumes:
-      - "/configurations/prowlarr-media:/config"
+      - "$CONF_FOLDER/prowlarr-media:/config"
     networks:
       - media
     # ports:
@@ -16,7 +16,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.prowlarr-media.rule=Host(`prowlarr-media.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.prowlarr-media.rule=Host(`prowlarr-media.$DOMAIN`)"
       - "traefik.http.routers.prowlarr-media.entrypoints=websecure"
       - "traefik.http.routers.prowlarr-media.tls.certresolver=production"
 
@@ -28,7 +28,7 @@ services:
       - PGID=3001
       - TZ=Pacific/Auckland
     volumes:
-      - "/configurations/prowlarr-other:/config"
+      - "$CONF_FOLDER/prowlarr-other:/config"
     networks:
       - downloads
     # ports:
@@ -36,7 +36,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.prowlarr-other.rule=Host(`prowlarr-other.weirdrussianserver.xyz`)"
+      - "traefik.http.routers.prowlarr-other.rule=Host(`prowlarr-other.$DOMAIN`)"
       - "traefik.http.routers.prowlarr-other.entrypoints=websecure"
       - "traefik.http.routers.prowlarr-other.tls.certresolver=production"
 
