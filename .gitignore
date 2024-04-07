@@ -6,3 +6,4 @@ terraform/**/*terraform.tfstate*
 terraform/**/PVE_CREDS
 terraform/**/terraform.tfvars
 terraform/**/keys
+.vscode/settings.json
