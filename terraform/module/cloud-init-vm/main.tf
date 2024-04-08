@@ -69,4 +69,5 @@ resource "proxmox_virtual_environment_download_file" "cloud_image" {
   node_name    = var.node_name
 
   url = var.cloud_image_url
+  overwrite_unmanaged = true
 }

@@ -59,18 +59,18 @@ module "docker-sandbox-vm" {
   cloud_config      = "cloud-inits/cloud-init-docker-sandbox.yml"
 }
 
-module "docker-sandbox-vm" {
+module "lab" {
   source            = "../module/cloud-init-vm"
-  vm_name           = "docker-sandbox"
+  vm_name           = "lab-vm"
   node_name         = "pve"
-  cpu_cores         = 2
+  cpu_cores         = 4
   memory_size       = 4096
-  disk_size         = 8
-  ipv4              = "10.13.25.16/24"
+  disk_size         = 20
+  ipv4              = "10.13.25.11/24"
   gateway           = "10.13.25.1"
   cloud_image_url   = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
   vm_disk_datastore = "vmdisks"
-  cloud_config      = "cloud-inits/cloud-init-docker-sandbox.yml"
+  cloud_config      = "cloud-inits/cloud-init-lab.yml"
 }
 
 resource "proxmox_virtual_environment_vm" "production" {
