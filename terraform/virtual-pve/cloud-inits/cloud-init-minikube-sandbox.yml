@@ -1,0 +1,28 @@
+#cloud-config
+users:
+  - default
+  - name: gpenda
+    groups:
+      - sudo
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDUK7ifxowbDtSpWNKEkptVmnEYAq0hdRHpKv/bcyRE1e2PfOVtrRpaOuyjZ204vk9hNcWjgDQ1uGW9uabRT7LCxOiRSGLhfW3kozy4dXhzVnIl2+7Zt1xrFIdUmOQsM8fuzbxnALltCLe+SyXO+d3byabkGA0jltTJHbri6nAOkJMdiXtB+21FzX5FPcecogVsFjAT159B6x2P6XZg2ZDRdB5pxZQf9dMMmiUolC9yZpgAA+cWQjMHhH/EBZA1DbA0kS5QhRRUnGYRlY1knFl7H/seq69GexSEo3rrQPL0QIrvBs2kbaqX5nLhEtdaCihIGauWeww6XtBboLYKerEqlCUZ8cFLqDl2cBxIwtG/NcYUAlcZsHMQqUCO+2i7g2cepDlysfm0RENNMFwxMeG8e4YRWlEb0WtlxJ9cOm0q2huOJynEhPuwVJtn4aI2euz6l3uVK4hX/VuB+bClnaC01U+psc3I/8jyCfBqb462vKTwYYjyi/u3TkqhuKhFb1s= auckland\guy-frank.penda@NZL424
+    sudo: ALL=(ALL) NOPASSWD:ALL
+runcmd:
+    - apt update
+    - apt install -y qemu-guest-agent net-tools
+    - timedatectl set-timezone Pacific/Auckland
+    - curl -fsSL https://get.docker.com -o get-docker.sh
+    - sh get-docker.sh
+    - groupadd docker
+    - usermod -aG docker gpenda
+    - apt install -y zsh
+    - runuser gpenda -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    - chsh -s $(which zsh) gpenda
+    - curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    - install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
+    - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    - install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && rm kubectl
+    - systemctl enable qemu-guest-agent
+    - systemctl start qemu-guest-agent
+    - echo "done" > /tmp/cloud-config.done

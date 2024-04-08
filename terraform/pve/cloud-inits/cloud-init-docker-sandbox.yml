@@ -1,0 +1,24 @@
+#cloud-config
+users:
+  - default
+  - name: gpenda
+    groups:
+      - sudo
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQD1V10aSsDaCx95+/S2BkoFYLEMhHOkGEO/SjId4uKlejL/+l22dmUOXBH9Nuas8pOKmcpSqZuYgAXrEVmSAGRdPMKvlzY/txQXTbKFTm/18IKJJGXozVZT/tw5RVV61F75KHIbEwuqq5ek2d2KFZx8kHk7PMxsZFd/KhE0ZqMJPbmyqfFgbAL/X603TaIgw17g+E7MWphIWEc6xobPyTTR6JOBonwuCPk6tw0oJmc4ZSfjjfIWjMDWmVUNzzQhJRO8lc3nrD5unXAFI3FBMl3RgiIlON26oVOH/u1As6hcgF+J1tUzEqmmFrV9WGSokKXkxZL82sWqqJ8TYkLnZYUzAhQXMHK81q8gk4Q+zBiuYuGGudcLy0YkmRqVz3qlG0w6Y6tfADJgtTYgIqkDZn22JYhQ8WHZR+FwyhqtqgdHqgKtF3G7IRbPpKp7XHR6a4n5nJUB8f3BHQiTcZ/ZcJJpzYYbbCM9z7ZQMEc4QFDOATs4B2Fwd7jD/atOQcUAm2s= auckland\guy-frank.penda@NZL424
+    sudo: ALL=(ALL) NOPASSWD:ALL
+runcmd:
+    - apt update
+    - apt install -y qemu-guest-agent net-tools
+    - timedatectl set-timezone Pacific/Auckland
+    - curl -fsSL https://get.docker.com -o get-docker.sh
+    - sh get-docker.sh
+    - groupadd docker
+    - usermod -aG docker gpenda
+    - apt install -y zsh
+    - runuser gpenda -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    - chsh -s $(which zsh) gpenda
+    - systemctl enable qemu-guest-agent
+    - systemctl start qemu-guest-agent
+    - echo "done" > /tmp/cloud-config.done
