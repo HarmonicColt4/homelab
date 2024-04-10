@@ -35,3 +35,8 @@ variable "memory" {
 variable "username" {
   type = string
 }
+
+variable "node_name" {
+  type    = string
+  default = "pve"
+}
