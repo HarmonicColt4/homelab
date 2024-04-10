@@ -6,7 +6,7 @@ module "minikube-sandbox" {
   cpu_cores       = 4
   memory          = 8192
   disk_size       = 40
-  username = var.username
+  username        = var.username
 }
 
 module "k3s-sandbox" {
@@ -17,5 +17,5 @@ module "k3s-sandbox" {
   cpu_cores       = 2
   memory          = 1024
   disk_size       = 8
-  username = var.username
+  username        = var.username
 }
