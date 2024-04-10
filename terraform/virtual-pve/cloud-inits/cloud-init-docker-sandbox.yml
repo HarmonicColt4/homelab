@@ -23,15 +23,7 @@ packages:
 runcmd:
     - runuser ${username} -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     - chsh -s $(which zsh) ${username}
-    - cd /home/${username}
-    - runuser ${username} -c "git clone https://github.com/HarmonicColt4/dotfiles.git"
-    - runuser ${username} -c "ln -sf dotfiles/.zshrc .zshrc"
-    - runuser ${username} -c "ln -sf dotfiles/.gitconfig .gitconfig"
     - curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh
-    - curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-    - install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
-    - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-    - install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && rm kubectl    
     - systemctl enable qemu-guest-agent
     - systemctl start qemu-guest-agent
     - echo "done" > /tmp/cloud-config.done

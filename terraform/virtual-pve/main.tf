@@ -1,13 +1,21 @@
-module "minikube-sandbox-vm" {
-  source            = "../module/cloud-init-vm"
-  vm_name           = "minikube-sandbox"
-  node_name         = "virtual-pve"
-  cpu_cores         = 4
-  memory_size       = 4096
-  disk_size         = 40
-  ipv4              = "10.13.25.20/24"
-  gateway           = "10.13.25.1"
-  cloud_image_url   = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
-  vm_disk_datastore = "local-lvm"
-  cloud_config      = "cloud-inits/cloud-init-minikube-sandbox.yml"
+module "minikube-sandbox" {
+  source          = "./modules/cloud-init-vm"
+  vm_name         = "minikube-sandbox"
+  cloud_image_id  = proxmox_virtual_environment_download_file.ubuntu_cloud_image.id
+  cloud_init_path = "cloud-inits/cloud-init-minikube-sandbox.yml"
+  cpu_cores       = 4
+  memory          = 8192
+  disk_size       = 40
+  username = var.username
+}
+
+module "k3s-sandbox" {
+  source          = "./modules/cloud-init-vm"
+  vm_name         = "k3s-sandbox"
+  cloud_image_id  = proxmox_virtual_environment_download_file.ubuntu_cloud_image.id
+  cloud_init_path = "cloud-inits/cloud-init-k3s-sandbox.yml"
+  cpu_cores       = 2
+  memory          = 1024
+  disk_size       = 8
+  username = var.username
 }
