@@ -20,6 +20,6 @@ provider "proxmox" {
   ssh {
     agent       = false
     username    = local.pve_local_username
-    private_key = file("../keys/id_rsa")
+    private_key = file("keys/id_rsa")
   }
 }
