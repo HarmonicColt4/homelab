@@ -40,3 +40,8 @@ variable "node_name" {
   type    = string
   default = "pve"
 }
+
+variable "disk_location" {
+  type    = string
+  default = "local-lvm"
+}

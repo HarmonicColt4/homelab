@@ -15,7 +15,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
   }
 
   disk {
-    datastore_id = "local-lvm"
+    datastore_id = var.disk_location
     file_id      = var.cloud_image_id
     interface    = "virtio0"
     iothread     = true
